@@ -1,5 +1,5 @@
 import fitz
-from PyQt5 import QtWidgets, QtGui
+from PyQt5 import QtGui, QtWidgets
 from PyQt5.QtWidgets import QGraphicsPixmapItem, QGraphicsScene
 
 from src.pdf_app.mouse_handler_anotation import PdfAnnotationMouseHandler
@@ -39,7 +39,9 @@ class PdfAnnotation:
             # Подключение событий мыши к graphicsView
             self.ui.graphicsView.mousePressEvent = self.graphics_manager.mousePressEvent
             self.ui.graphicsView.mouseMoveEvent = self.graphics_manager.mouseMoveEvent
-            self.ui.graphicsView.mouseReleaseEvent = self.graphics_manager.mouseReleaseEvent
+            self.ui.graphicsView.mouseReleaseEvent = (
+                self.graphics_manager.mouseReleaseEvent
+            )
 
         except Exception as e:
             print(f"Error in setup_annotation_ui: {e}")
@@ -50,8 +52,9 @@ class PdfAnnotation:
         """
         try:
             # Выбор файла PDF
-            file_path, _ = QtWidgets.QFileDialog.getOpenFileName(self.ui.centralwidget, "Open PDF File", "",
-                                                                 "PDF Files (*.pdf)")
+            file_path, _ = QtWidgets.QFileDialog.getOpenFileName(
+                self.ui.centralwidget, "Open PDF File", "", "PDF Files (*.pdf)"
+            )
             self.pdf_document = fitz.open(file_path)
             print(f"PDF loaded: {file_path}")
             self.current_page = 0
@@ -71,8 +74,13 @@ class PdfAnnotation:
                 image = page.get_pixmap()
 
                 # Преобразование в объект QImage
-                qimage = QtGui.QImage(image.samples, image.width, image.height, image.stride,
-                                      QtGui.QImage.Format_RGB888)
+                qimage = QtGui.QImage(
+                    image.samples,
+                    image.width,
+                    image.height,
+                    image.stride,
+                    QtGui.QImage.Format_RGB888,
+                )
 
                 pixmap = QtGui.QPixmap.fromImage(qimage)
 
@@ -103,7 +111,10 @@ class PdfAnnotation:
         Переход на следующую страницу PDF и отображение её.
         """
         try:
-            if self.current_page < self.pdf_document.page_count - 1 and self.pdf_document:
+            if (
+                self.current_page < self.pdf_document.page_count - 1
+                and self.pdf_document
+            ):
                 self.current_page += 1
                 self.rect_item = None  # Очистка rect_item при смене страницы
                 self.show_page()
