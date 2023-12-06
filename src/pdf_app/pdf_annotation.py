@@ -2,7 +2,7 @@ import fitz
 from PyQt5 import QtGui, QtWidgets
 from PyQt5.QtWidgets import QGraphicsPixmapItem, QGraphicsScene
 
-from src.pdf_app.mouse_handler_anotation import PdfAnnotationMouseHandler
+from pdf_app.mouse_handler_anotation import PdfAnnotationMouseHandler
 
 
 class PdfAnnotation:
@@ -112,8 +112,8 @@ class PdfAnnotation:
         """
         try:
             if (
-                self.current_page < self.pdf_document.page_count - 1
-                and self.pdf_document
+                    self.current_page < self.pdf_document.page_count - 1
+                    and self.pdf_document
             ):
                 self.current_page += 1
                 self.rect_item = None  # Очистка rect_item при смене страницы
