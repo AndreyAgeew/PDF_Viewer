@@ -1,8 +1,15 @@
+import os
 import sys
 
 from PyQt5 import QtWidgets
 
-from src.pdf_app.pdf_viewer import PdfViewer
+from pdf_app.pdf_viewer import PdfViewer
+
+# Получаем путь к текущей директории
+current_dir = os.path.dirname(os.path.realpath(__file__))
+
+# Добавляем корневую директорию проекта в sys.path
+sys.path.insert(0, os.path.join(current_dir, '..'))
 
 if __name__ == "__main__":
     # Создание экземпляра приложения Qt

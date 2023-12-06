@@ -1,7 +1,7 @@
 from PyQt5 import QtWidgets
 
-from src.pdf_app.pdf_annotation import PdfAnnotation
-from src.pdf_app.pdf_viewer_ui import Ui_PdfViewer
+from pdf_app.pdf_annotation import PdfAnnotation
+from pdf_app.pdf_viewer_ui import Ui_PdfViewer
 
 
 class PdfViewer(QtWidgets.QMainWindow):
