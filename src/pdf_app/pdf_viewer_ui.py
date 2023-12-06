@@ -1,7 +1,4 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QGraphicsScene, QLabel
-
-from src.pdf_app.mouse_handler_anotation import PdfAnnotationMouseHandler
 
 
 class Ui_PdfViewer(object):
@@ -9,9 +6,6 @@ class Ui_PdfViewer(object):
         PdfViewer.setObjectName("PdfViewer")
         PdfViewer.resize(700, 950)
         PdfViewer.setIconSize(QtCore.QSize(16, 16))
-        self.label = QLabel(PdfViewer)
-
-        self.scene = QGraphicsScene()
 
         self.centralwidget = QtWidgets.QWidget(PdfViewer)
         self.centralwidget.setObjectName("centralwidget")
@@ -19,17 +13,6 @@ class Ui_PdfViewer(object):
         self.graphicsView = QtWidgets.QGraphicsView(self.centralwidget)
         self.graphicsView.setGeometry(QtCore.QRect(30, 121, 650, 850))
         self.graphicsView.setObjectName("graphicsView")
-
-        # Создайте экземпляр PdfAnnotationMouseHandler
-        self.annotation_handler = PdfAnnotationMouseHandler()
-        self.annotation_handler.scene = self.scene
-        self.annotation_handler.graphicsView = self.graphicsView
-        self.annotation_handler.rect_item = None
-
-        # Подключите обработчики событий мыши
-        self.graphicsView.mousePressEvent = self.annotation_handler.mousePressEvent
-        self.graphicsView.mouseReleaseEvent = self.annotation_handler.mouseReleaseEvent
-        self.graphicsView.setScene(self.scene)
 
         self.horizontalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
         self.horizontalLayoutWidget.setGeometry(QtCore.QRect(340, 30, 241, 71))

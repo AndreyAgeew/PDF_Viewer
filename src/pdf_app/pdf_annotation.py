@@ -1,8 +1,8 @@
 import fitz
 from PyQt5 import QtWidgets, QtGui
-
-from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtWidgets import QGraphicsPixmapItem, QGraphicsScene
+
+from src.pdf_app.mouse_handler_anotation import PdfAnnotationMouseHandler
 
 
 class PdfAnnotation:
@@ -17,13 +17,18 @@ class PdfAnnotation:
             self.ui.pushButtonNext.clicked.connect(self.next_page)
             self.current_page = 0
             self.pdf_document = None
-            self.webview = QWebEngineView(self.ui.centralwidget)
-            self.webview.setGeometry(self.ui.graphicsView.geometry())
-            self.webview.setVisible(False)
-
             self.scene = QGraphicsScene(self.ui.centralwidget)
             self.ui.graphicsView.setScene(self.scene)
+            self.rect_item = None
+            self.start_pos = None
 
+            # Create an instance of PdfAnnotationMouseHandler
+            self.graphics_manager = PdfAnnotationMouseHandler(self)
+
+            # Connect events to graphicsView
+            self.ui.graphicsView.mousePressEvent = self.graphics_manager.mousePressEvent
+            self.ui.graphicsView.mouseMoveEvent = self.graphics_manager.mouseMoveEvent
+            self.ui.graphicsView.mouseReleaseEvent = self.graphics_manager.mouseReleaseEvent
 
         except Exception as e:
             print(f"Error in setup_annotation_ui: {e}")
@@ -53,12 +58,19 @@ class PdfAnnotation:
 
                 pixmap_item = QGraphicsPixmapItem(pixmap)
                 self.scene.clear()
+
+                # Add pixmap_item to the scene
                 self.scene.addItem(pixmap_item)
+
+                # Add rect_item to the scene if it exists
+                if self.rect_item:
+                    self.scene.addItem(self.rect_item)
 
     def previous_page(self):
         try:
             if self.current_page > 0 and self.pdf_document:
                 self.current_page -= 1
+                self.rect_item = None  # Clear rect_item when changing pages
                 self.show_page()
         except Exception as e:
             print(f"Error in previous_page: {e}")
@@ -67,6 +79,7 @@ class PdfAnnotation:
         try:
             if self.current_page < self.pdf_document.page_count - 1 and self.pdf_document:
                 self.current_page += 1
+                self.rect_item = None  # Clear rect_item when changing pages
                 self.show_page()
         except Exception as e:
             print(f"Error in next_page: {e}")
